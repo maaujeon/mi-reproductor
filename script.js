@@ -1,43 +1,29 @@
-const fileInput = document.getElementById('file-input');
-const audioPlayer = document.getElementById('audio-player');
+// Lista con los nombres EXACTOS de tus archivos subidos
+const misCanciones = [
+    { titulo: "Time to Pretend", artista: "MGMT", archivo: "01 MGMT - Time to Pretend.mp3" },
+    { titulo: "Lady (Hear Me Tonight)", artista: "Modjo", archivo: "03 Modjo - Lady (Hear Me Tonight).mp3" },
+    { titulo: "Black Hole Sun", artista: "Soundgarden", archivo: "07 Soundgarden - Black Hole Sun.mp3" }
+];
+
 const playlist = document.getElementById('playlist');
-const cover = document.getElementById('cover');
-const titleTag = document.getElementById('track-title');
-const artistTag = document.getElementById('track-artist');
+const audioPlayer = document.getElementById('audio-player');
+const trackTitle = document.getElementById('track-title');
+const trackArtist = document.getElementById('track-artist');
 
-fileInput.addEventListener('change', function(e) {
-    const files = e.target.files;
-    playlist.innerHTML = ""; 
-
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const li = document.createElement('li');
-        li.innerText = file.name;
+// Esta función genera la lista visual en tu web
+misCanciones.forEach(cancion => {
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${cancion.titulo}</strong> - ${cancion.artista}`;
+    
+    li.onclick = () => {
+        // encodeURI ayuda a que los espacios en blanco no rompan el link
+        audioPlayer.src = encodeURI(cancion.archivo);
+        audioPlayer.play();
         
-        li.addEventListener('click', function() {
-            const url = URL.createObjectURL(file);
-            audioPlayer.src = url;
-            audioPlayer.play();
-            
-            // --- LEER METADATOS ---
-            jsmediatags.read(file, {
-                onSuccess: function(tag) {
-                    titleTag.innerText = tag.tags.title || file.name;
-                    artistTag.innerText = tag.tags.artist || "Artista Desconocido";
-                    
-                    if (tag.tags.picture) {
-                        const { data, format } = tag.tags.picture;
-                        let base64String = "";
-                        for (let i = 0; i < data.length; i++) {
-                            base64String += String.fromCharCode(data[i]);
-                        }
-                        cover.src = `data:${format};base64,${window.btoa(base64String)}`;
-                    } else {
-                        cover.src = "https://via.placeholder.com/150";
-                    }
-                }
-            });
-        });
-        playlist.appendChild(li);
-    }
+        // Actualizamos los textos de la pantalla
+        trackTitle.innerText = cancion.titulo;
+        trackArtist.innerText = cancion.artista;
+    };
+    
+    playlist.appendChild(li);
 });
