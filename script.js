@@ -1,85 +1,43 @@
-const misCanciones = [
-    { titulo: "Time to Pretend", artista: "MGMT", archivo: "01 MGMT - Time to Pretend.mp3" },
-    { titulo: "Lady (Hear Me Tonight)", artista: "Modjo", archivo: "03 Modjo - Lady (Hear Me Tonight).mp3" },
-    { titulo: "Black Hole Sun", artista: "Soundgarden", archivo: "07 Soundgarden - Black Hole Sun.mp3" }
-];
+const fileInput = document.getElementById('file-input');
+const audioPlayer = document.getElementById('audio-player');
+const playlist = document.getElementById('playlist');
+const cover = document.getElementById('cover');
+const titleTag = document.getElementById('track-title');
+const artistTag = document.getElementById('track-artist');
 
-let indiceActual = 0;
-let esAleatorio = false;
+fileInput.addEventListener('change', function(e) {
+    const files = e.target.files;
+    playlist.innerHTML = ""; 
 
-const audio = document.getElementById('audio-player');
-const playPauseBtn = document.getElementById('play-pause-btn');
-const progress = document.getElementById('progress-bar');
-const progressContainer = document.getElementById('progress-container');
-const shuffleBtn = document.getElementById('shuffle-btn');
-
-// Cargar canción
-function cargarCancion(index) {
-    indiceActual = index;
-    const cancion = misCanciones[indiceActual];
-    audio.src = encodeURI(cancion.archivo);
-    document.getElementById('track-title').innerText = cancion.titulo;
-    document.getElementById('track-artist').innerText = cancion.artista;
-}
-
-// Play / Pausa
-playPauseBtn.onclick = () => {
-    if (audio.paused) {
-        audio.play();
-        playPauseBtn.innerText = "⏸";
-    } else {
-        audio.pause();
-        playPauseBtn.innerText = "▶️";
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const li = document.createElement('li');
+        li.innerText = file.name;
+        
+        li.addEventListener('click', function() {
+            const url = URL.createObjectURL(file);
+            audioPlayer.src = url;
+            audioPlayer.play();
+            
+            // --- LEER METADATOS ---
+            jsmediatags.read(file, {
+                onSuccess: function(tag) {
+                    titleTag.innerText = tag.tags.title || file.name;
+                    artistTag.innerText = tag.tags.artist || "Artista Desconocido";
+                    
+                    if (tag.tags.picture) {
+                        const { data, format } = tag.tags.picture;
+                        let base64String = "";
+                        for (let i = 0; i < data.length; i++) {
+                            base64String += String.fromCharCode(data[i]);
+                        }
+                        cover.src = `data:${format};base64,${window.btoa(base64String)}`;
+                    } else {
+                        cover.src = "https://via.placeholder.com/150";
+                    }
+                }
+            });
+        });
+        playlist.appendChild(li);
     }
-};
-
-// Siguiente / Anterior
-document.getElementById('next-btn').onclick = () => {
-    if (esAleatorio) {
-        indiceActual = Math.floor(Math.random() * misCanciones.length);
-    } else {
-        indiceActual = (indiceActual + 1) % misCanciones.length;
-    }
-    cargarCancion(indiceActual);
-    audio.play();
-};
-
-document.getElementById('prev-btn').onclick = () => {
-    indiceActual = (indiceActual - 1 + misCanciones.length) % misCanciones.length;
-    cargarCancion(indiceActual);
-    audio.play();
-};
-
-// Modo Aleatorio
-shuffleBtn.onclick = () => {
-    esAleatorio = !esAleatorio;
-    shuffleBtn.classList.toggle('active');
-};
-
-// Actualizar barra de progreso
-audio.ontimeupdate = (e) => {
-    const { duration, currentTime } = e.srcElement;
-    const porcentaje = (currentTime / duration) * 100;
-    progress.style.width = `${porcentaje}%`;
-    
-    // Actualizar números de tiempo
-    document.getElementById('current-time').innerText = formatearTiempo(currentTime);
-    if (duration) document.getElementById('duration').innerText = formatearTiempo(duration);
-};
-
-// Click en la barra para saltar a un punto
-progressContainer.onclick = (e) => {
-    const width = progressContainer.clientWidth;
-    const clickX = e.offsetX;
-    const duration = audio.duration;
-    audio.currentTime = (clickX / width) * duration;
-};
-
-function formatearTiempo(segundos) {
-    const min = Math.floor(segundos / 60);
-    const seg = Math.floor(segundos % 60);
-    return `${min}:${seg < 10 ? '0' : ''}${seg}`;
-}
-
-// Iniciar cargando la primera
-cargarCancion(0);
+});
