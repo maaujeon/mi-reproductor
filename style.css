@@ -1,0 +1,97 @@
+/* Configuración General */
+body {
+    background-color: #121212; /* Fondo oscuro profundo */
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* Contenedor del Reproductor */
+.player {
+    background: #181818;
+    width: 350px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    text-align: center;
+}
+
+/* Botón de Carga Personalizado */
+#file-input {
+    display: none; /* Escondemos el botón feo por defecto */
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #1DB954; /* Verde Spotify */
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: transform 0.2s;
+}
+
+.custom-file-upload:hover {
+    transform: scale(1.05);
+    background: #1ed760;
+}
+
+/* Área de "Sonando Ahora" */
+.now-playing {
+    margin-bottom: 20px;
+}
+
+#cover {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    background: #282828;
+}
+
+#track-title {
+    font-size: 1.4rem;
+    margin: 15px 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#track-artist {
+    font-size: 1rem;
+    color: #b3b3b3;
+    margin: 0 0 20px;
+}
+
+/* Controles de Audio */
+audio {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 20px;
+    filter: invert(100%) hue-rotate(180deg) brightness(1.5); /* Esto hace que el control de audio combine con el tema oscuro */
+}
+
+/* Lista de Canciones */
+#playlist {
+    list-style: none;
+    padding: 0;
+    max-height: 150px;
+    overflow-y: auto;
+    text-align: left;
+}
+
+#playlist li {
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border-bottom: 1px solid #282828;
+    transition: background 0.2s;
+    font-size: 0.9rem;
+    color: #b3b3b

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Reproductor Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+</head>
+<body>
+
+    <div class="player">
+        <div class="header">
+            <input type="file" id="file-input" accept="audio/mp3" multiple>
+            <label for="file-input" class="custom-file-upload">Cargar Música</label>
+        </div>
+
+        <div class="now-playing">
+            <img id="cover" src="https://via.placeholder.com/150" alt="Portada">
+            <h2 id="track-title">Selecciona una canción</h2>
+            <h3 id="track-artist">Artista</h3>
+        </div>
+
+        <audio id="audio-player" controls></audio>
+        <ul id="playlist"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
